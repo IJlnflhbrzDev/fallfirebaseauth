@@ -20,7 +20,18 @@ class MyApp extends StatelessWidget {
           body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          // Logic ketika masih menunggu bener apa tidak data yg di masukkan sudah sesuai apa blm
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          // Logic ketika data yg di masukan salah atau error yg lain
+          else if (snapshot.hasError) {
+            return const Center(child: Text('Opps Somethink whent wrong'));
+          }
+          // Logic Ketika data yg di butuh kan sama atau ada
+          else if (snapshot.hasData) {
             return const HomePage();
           }
           return const SignIn();
